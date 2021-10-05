@@ -1,0 +1,8 @@
+{
+    "require": {
+        "mercadopago/dx-php": "^2.4.2",
+        "slim/slim": "4.*",
+        "slim/psr7": "^1.5",
+        "twig/twig": "^3.0"
+    }
+}
