@@ -10,41 +10,14 @@ require_once __DIR__  . '/vendor/autoload.php';
 
 $app = AppFactory::create();
 
-MercadoPago\SDK::setAccessToken($_ENV["ACCESS_TOKEN"]);
+MercadoPago\SDK::setAccessToken($_ENV["MERCADO_PAGO_SAMPLE_ACCESS_TOKEN"]);
 
 // serve html
 $app->get('/', function (Request $request, Response $response, $args) {
     $loader = new FilesystemLoader(__DIR__ . '/../client');
     $twig = new Environment($loader);
 
-    $response->getBody()->write($twig->render('index.html', ['public_key' => $_ENV["PUBLIC_KEY"]]));
-    return $response;
-});
-
-// serve css
-$app->get('/css/{name}', function (Request $request, Response $response, $args) {
-    $mime_type = 'text/css';
-
-    $response = $response->withHeader('Content-Type', $mime_type . '; charset=UTF-8');
-    $response->getBody()->write(file_get_contents(__DIR__ . '/../client/css/' . $args['name']));
-    return $response;
-});
-
-// serve javascript
-$app->get('/js/{name}', function (Request $request, Response $response, $args) {
-    $mime_type = 'application/javascript';
-
-    $response->withHeader('Content-Type', $mime_type . '; charset=UTF-8');
-    $response->getBody()->write(file_get_contents(__DIR__ . '/../client/js/' . $args['name']));
-    return $response;
-});
-
-// serve images
-$app->get('/img/{name}', function (Request $request, Response $response, $args) {
-    $mime_type = 'image/png';
-
-    $response->withHeader('Content-Type', $mime_type . '; charset=UTF-8');
-    $response->getBody()->write(file_get_contents(__DIR__ . '/../client/img/' . $args['name']));
+    $response->getBody()->write($twig->render('index.html', ['public_key' => $_ENV["MERCADO_PAGO_SAMPLE_PUBLIC_KEY"]]));
     return $response;
 });
 
@@ -82,6 +55,40 @@ $app->post('/process_payment', function (Request $request, Response $response, $
 
     $response->getBody()->write($response_body);
     return $response->withHeader('Content-Type', 'application/json')->withStatus(201);
+});
+
+$app->get('/{filetype}/{filename}', function (Request $request, Response $response, $args) {
+    switch ($args['filetype']) {
+        case 'css':
+            $fileFolderPath = __DIR__ . '/../client/css/';
+            $mimeType = 'text/css';
+            break;
+
+        case 'js':
+            $fileFolderPath = __DIR__ . '/../client/js/';
+            $mimeType = 'application/javascript';
+            break;
+
+        case 'img':
+            $fileFolderPath = __DIR__ . '/../client/img/';
+            $mimeType = 'image/png';
+            break;
+
+        default:
+            $fileFolderPath = '';
+            $mimeType = '';
+    }
+
+    $filePath = $fileFolderPath . $args['filename'];
+
+    if (!file_exists($filePath)) {
+        return $response->withStatus(404, 'File not found');
+    }
+
+    $newResponse = $response->withHeader('Content-Type', $mimeType . '; charset=UTF-8');
+    $newResponse->getBody()->write(file_get_contents($filePath));
+
+    return $newResponse;
 });
 
 $app->run();
