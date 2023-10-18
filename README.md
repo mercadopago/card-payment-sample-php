@@ -2,12 +2,12 @@
 [Português](README.pt.md) / [Español](README.es.md)
 
 ## :computer: Technologies
-- PHP 7.3.29
+- PHP 8.2
 - Slim Framework v4
 - [Composer](https://getcomposer.org/download) (dependency manager)
 
 ## 💡 Requirements
-- PHP 7.2.5 or higher (you can download PHP [here](https://www.php.net/downloads)).
+- PHP 8.2 or higher (you can download PHP [here](https://www.php.net/downloads)).
 - [Composer](https://getcomposer.org/download) (dependency manager).
 - [Read our instructions](https://www.mercadopago.com/developers/en/guides/overview#bookmark_el_desarrollo_con_c%C3%B3digo) on how to create an application at the Mercado Pago Developer Panel in order to acquire your public key and access token. They will grant you access to Mercado Pago's public APIs.
 
